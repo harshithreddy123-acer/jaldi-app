@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../core/guest_mode_provider.dart';
+import '../../core/role_provider.dart';
 
 class AuthScreen extends ConsumerStatefulWidget {
   const AuthScreen({super.key});
@@ -136,6 +138,41 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
         } else {
           setState(() => _error = 'Google Sign-In failed: $errStr');
         }
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _directGuestEntry({bool asProvider = false}) async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+      _infoMessage = null;
+    });
+
+    try {
+      // 1. Attempt anonymous sign-in in the background if enabled
+      try {
+        await Supabase.instance.client.auth.signInAnonymously();
+      } catch (_) {}
+
+      // 2. Enable Guest / Direct Demo Mode in GoRouter
+      ref.read(guestModeProvider.notifier).setGuest(true);
+      if (asProvider) {
+        ref.read(userRoleProvider.notifier).setRole(UserRole.provider);
+      } else {
+        ref.read(userRoleProvider.notifier).setRole(UserRole.customer);
+      }
+
+      if (mounted) {
+        context.go(asProvider ? '/provider' : '/home');
+      }
+    } catch (e) {
+      debugPrint('Direct entry notice: $e');
+      ref.read(guestModeProvider.notifier).setGuest(true);
+      if (mounted) {
+        context.go(asProvider ? '/provider' : '/home');
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -363,6 +400,74 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
+                ),
+                const SizedBox(height: 24),
+
+                // Evaluator / Judge Direct Entry Section
+                const Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        'JUDGES & INSTANT DEMO',
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 0.8,
+                        ),
+                      ),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+                const SizedBox(height: 14),
+
+                // Direct Driver Mode Entry Button
+                ElevatedButton.icon(
+                  onPressed: _isLoading ? null : () => _directGuestEntry(asProvider: false),
+                  icon: const Icon(Icons.flash_on, color: Colors.white),
+                  label: const Text(
+                    '⚡ Direct Entry (Driver / Customer)',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    backgroundColor: Colors.deepOrange,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                // Direct Technician Mode Entry Button
+                OutlinedButton.icon(
+                  onPressed: _isLoading ? null : () => _directGuestEntry(asProvider: true),
+                  icon: const Icon(Icons.build_circle_outlined, color: Colors.deepOrange),
+                  label: const Text(
+                    '🛠️ Direct Entry (Technician / Provider)',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.deepOrange,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 13),
+                    side: const BorderSide(color: Colors.deepOrange),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Skip sign in and email verification to test all features directly.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
                 ),
               ],
             ),

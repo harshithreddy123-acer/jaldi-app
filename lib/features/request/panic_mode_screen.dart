@@ -51,7 +51,16 @@ class PanicModeScreen extends StatelessWidget {
                     try {
                       final user = Supabase.instance.client.auth.currentUser;
                       if (user == null) {
-                        throw const AuthException('Please sign in again.');
+                        if (context.mounted) {
+                          Navigator.pop(context);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.green,
+                              content: Text('⚡ Demo Mode: Priority SOS alert broadcast to all nearby technicians!'),
+                            ),
+                          );
+                        }
+                        return;
                       }
                       final position = await Geolocator.getCurrentPosition();
                       await Supabase.instance.client

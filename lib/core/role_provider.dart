@@ -39,6 +39,10 @@ class UserRoleNotifier extends StateNotifier<UserRole> {
   Future<void> refreshRole() async {
     await _fetchRole();
   }
+
+  void setRole(UserRole role) {
+    state = role;
+  }
 }
 
 final userRoleProvider = StateNotifierProvider<UserRoleNotifier, UserRole>((ref) {

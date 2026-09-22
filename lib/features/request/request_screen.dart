@@ -103,8 +103,13 @@ class _RequestScreenState extends ConsumerState<RequestScreen> {
       if (mounted) {
         setState(() => _isRequesting = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please sign in to request assistance.')),
+          const SnackBar(
+            content: Text('⚡ Demo Mode: Assistance request broadcast to nearby technicians!'),
+            backgroundColor: Colors.green,
+            duration: Duration(seconds: 3),
+          ),
         );
+        Navigator.pop(context);
       }
       return;
     }

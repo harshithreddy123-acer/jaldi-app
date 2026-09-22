@@ -10,6 +10,7 @@ import '../features/profile/profile_screen.dart';
 import '../features/provider/provider_application_screen.dart';
 import '../features/map/tracking_screen.dart';
 import 'role_provider.dart';
+import 'guest_mode_provider.dart';
 
 import '../features/request/request_screen.dart';
 import '../features/request/panic_mode_screen.dart';
@@ -52,6 +53,7 @@ final authRouterNotifierProvider = Provider<AuthRouterNotifier>((ref) {
 final routerProvider = Provider<GoRouter>((ref) {
   final supabase = Supabase.instance.client;
   final userRole = ref.watch(userRoleProvider);
+  final isGuest = ref.watch(guestModeProvider);
   final authNotifier = ref.watch(authRouterNotifierProvider);
 
   return GoRouter(
@@ -133,7 +135,8 @@ final routerProvider = Provider<GoRouter>((ref) {
         return '/reset-password';
       }
 
-      if (session == null) {
+      // If no session and not in guest/direct entry mode, redirect to /auth
+      if (session == null && !isGuest) {
         return isAuthRoute ? null : '/auth';
       }
 
@@ -143,13 +146,13 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
 
       if (isAuthRoute) {
-        // Route based on role after login
+        // Route based on role after login or direct entry
         return userRole == UserRole.provider ? '/provider' : '/home';
       }
 
-      // Guard the provider route
+      // Guard the provider route unless in provider mode or explicitly switching
       if (location.startsWith('/provider') || location.startsWith('/incoming')) {
-        if (userRole != UserRole.provider) {
+        if (userRole != UserRole.provider && !isGuest) {
           return '/home';
         }
       }
