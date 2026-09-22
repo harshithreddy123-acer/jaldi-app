@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: jaldi-roadside-assistance
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile

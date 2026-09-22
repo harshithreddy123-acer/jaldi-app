@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "868959012606",
+    "project_id": "jaldi-app-cb1",
+    "storage_bucket": "jaldi-app-cb1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:868959012606:android:2c24226c001234c58c87af",
+        "android_client_info": {
+          "package_name": "com.example.jaldi_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "868959012606-ahpgrn0t9n8313nqi3alffjb6613j2di.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.jaldi_app",
+            "certificate_hash": "efe6753fed24114e5ea9745b130311efe1ef4acd"
+          }
+        },
+        {
+          "client_id": "868959012606-fnlojq2tmcft5i2i3qcur0hvhk6hrbtk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlBMEMYWxiE0RBWX36sWQXcdmUgdAE6vM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "868959012606-fnlojq2tmcft5i2i3qcur0hvhk6hrbtk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "868959012606-u9ma681gs5cpdjhamck4ovl5a0is15ji.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.sadakSevaApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

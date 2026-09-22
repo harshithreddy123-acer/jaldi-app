@@ -1,0 +1,39 @@
+{
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  },
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "jaldi-app-cb1",
+          "appId": "1:868959012606:android:2c24226c001234c58c87af",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "jaldi-app-cb1",
+          "configurations": {
+            "android": "1:868959012606:android:2c24226c001234c58c87af",
+            "ios": "1:868959012606:ios:5033f55cdd97eb168c87af",
+            "macos": "1:868959012606:ios:5033f55cdd97eb168c87af",
+            "web": "1:868959012606:web:dac67eefa4ddc15a8c87af",
+            "windows": "1:868959012606:web:4dfe07606952f4c98c87af"
+          }
+        }
+      }
+    }
+  }
+}
